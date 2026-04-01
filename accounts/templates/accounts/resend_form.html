@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Login{% endblock title %}
+{% block extra_style %}<link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">{% endblock extra_style %}
+
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card  w-50" style="box-shadow: 1px 5px 20px 6px #bbb1b1; margin: auto; margin-top: 200px;">
+        <div class="card-body">
+            <h3>Resend Activation Link</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label>Enter your email address:</label>
+                    <input type="email" name="email" class="form-control" placeholder="Email..." required>
+                </div>
+                {% if messages %}
+                    {% for msg in messages %}
+                        <div class="alert alert-{{msg.tags}}">{{msg}}</div>
+                    {% endfor %}
+                {% endif %}
+                <button id="re-send" type="submit" class="btn btn-primary">Send New Link<span id="counter"></span></button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_script %}<script src="{% static 'accounts/js/resend_form.js' %}"></script>{% endblock extra_script %}
+{% endblock content %}

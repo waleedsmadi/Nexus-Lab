@@ -1,0 +1,111 @@
+  {% load static %}
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+  <div class="container">
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+
+
+          {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            
+            {% if user.img %}
+              <a class="nav-link d-block" style="width: 50px; border-radius: 50%;" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img class="" style="width: 100%; border-radius: 50%;" src="{{user.img.url}}" alt="">
+              </a>
+            {% else %}
+              <a class="nav-link d-block" style="width: 50px; border-radius: 50%;" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img class="" style="width: 100%; border-radius: 50%;" src="{% static 'images/accounts/default-profile-image.jpeg' %}" alt="">
+              </a>
+            {% endif %}
+
+
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="{% url 'accounts:profile_view_url' request.user.username %}">Edit Profile</a></li>
+              <li><a class="dropdown-item" href="{% url 'accounts:change_password_url' request.user.username %}">Change password</a></li>
+              <li><a class="dropdown-item" href="{% url 'wallet:wallet_url' request.user.username %}">My Wallet</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logout-modal">Logout</button></li>
+            </ul>
+          </li>
+
+          {% endif %}
+
+
+
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'pages:home_url' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Products
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="{% url 'product:products_url' 'all' %}">All</a></li>
+              {% for cat in categories %}
+                  <li><a class="dropdown-item" href="{% url 'product:products_url' cat.0 %}">{{cat.1}}</a></li>
+              {% endfor %}
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'cart:cart_view_url' %}">
+              <i class="fa-solid fa-cart-arrow-down mt-2 ms-4 text-danger" style="font-size: 25px;  cursor: pointer;"></i>
+            </a>
+            
+            <span id="cart-navbar-counter" style="display: inline-flex; width: 20px; height: 20px; border-radius: 50%; font-size: 20px; color: red; user-select: none;">{{global_cart_total}}</span>
+          </li>
+        </ul>
+        
+        {% if request.resolver_match.view_name == 'product:products_url' %}
+          <form class="d-flex">
+            <input id="search-products" class="form-control" type="search" placeholder="Search" aria-label="Search">
+          </form>
+        {% endif %}
+
+        {% if not request.user.is_authenticated %}
+          <form class="d-flex ms-5">
+            <a class="btn btn-info" href="{% url 'accounts:login_view_url' %}" type="submit">Login</a>
+            <a class="btn btn-info ms-2" href="{% url 'accounts:signup_view_url' %}" type="submit">Signup</a>
+          </form>
+        {% endif %}
+      </div>
+
+
+      <a class="navbar-brand ms-3" href="{% url 'pages:home_url' %}">Nexus Lab</a>
+
+
+
+
+  </div>
+</nav>
+
+
+
+<!-- Modal for Logout -->
+<div class="modal fade" id="logout-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Logout</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Do you really want to log out?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <form method="POST" action="{% url 'accounts:logout_account_url' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Yes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

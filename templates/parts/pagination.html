@@ -1,0 +1,43 @@
+<nav aria-label="..." class="d-flex justify-content-center mt-5" id="pagination">
+  <ul class="pagination">
+
+
+    {% if products.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{products.previous_page_number}}" tabindex="-1" aria-disabled="true">Previous</a>
+        </li>
+    {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true">Previous</a>
+        </li>
+    {% endif %}
+
+
+
+    {% for n in products.elided_pages %}
+        {% if n == products.paginator.ELLIPSIS %}
+            <li class="page-item"><a class="page-link">...</a></li>
+        {% elif n == products.number %}
+            <li class="page-item active"><a class="page-link">{{n}}</a></li>
+        {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{n}}">{{n}}</a></li>
+        {% endif %}
+    {% endfor %}
+
+
+
+    {% if products.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{products.next_page_number}}">Next</a>
+        </li>
+    {% else %}
+        <li class="page-item disabled">
+            <a class="page-link">Next</a>
+        </li>
+    {% endif %}
+
+
+
+
+  </ul>
+</nav>

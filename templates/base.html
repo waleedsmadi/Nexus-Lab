@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    {% block extra_style %}{% endblock extra_style %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+    
+
+    {% include "parts/navbar.html" %}
+    <main class="flex-fill">
+        {% block content %}
+        {% endblock content %}
+    </main>
+    {% include "parts/footer.html" %}
+
+    <script src="https://kit.fontawesome.com/f8948c7132.js" crossorigin="anonymous"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    {% block extra_script %}{% endblock extra_script %}
+</body>
+</html>

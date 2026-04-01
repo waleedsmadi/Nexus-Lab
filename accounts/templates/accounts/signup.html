@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Signup{% endblock title %}
+{% block extra_style %}<link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">{% endblock extra_style %}
+
+
+
+{% block content %}
+<div class="container">
+<form class="form" method="POST" style="width: 500px; margin-top: 80px;">
+    {% csrf_token %}
+    <h2 class="mb-3 text-center">Create account</h2>
+    {% for field in form %}
+        
+            {% if field.name == "email" %}
+                <div class="mb-3">
+                    <label for="email-signup" class="form-label">Email address</label>
+                    {{field}}
+                </div>
+
+            {% elif field.name == "first_name" %}
+                <div class="mb-3">
+                    <label for="first-name-signup" class="form-label">First name</label>
+                    {{field}}
+                </div>
+
+
+            {% elif field.name == "last_name" %}
+                <div class="mb-3">
+                    <label for="last-name-signup" class="form-label">Last name</label>
+                    {{field}}
+                </div>
+
+            {% elif field.name == "password" %}
+                <div class="mb-3">
+                    <label for="password-signup" class="form-label">Password</label>
+                    {{field}}
+                </div>
+            {% elif field.name == "re_password" %}
+                <div class="mb-3">
+                    <label for="re-password-signup" class="form-label">Confirm password</label>
+                    {{field}}
+                </div>
+            {% endif %}
+
+
+            <!-- display errors for per field if exist -->
+            {% if field.errors %}
+                {% for err in field.errors %}
+                    <div style="font-size: 16px; color: red;">{{err}}</div>
+                {% endfor %}
+            {% endif %}
+    {% endfor %}
+
+
+
+    <button type="submit" class="btn btn-primary w-100 mt-2">Signup</button>
+
+
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+                <div style="font-size: 16px; color: red;">{{error}}</div>
+        {% endfor %}
+    {% endif %}
+
+    <h4 class="text-center mt-5">Do you have an account?</h4>
+    <a href="{% url 'accounts:login_view_url' %}" class="d-block text-center" style="text-decoration-line: none;">Login</a>
+</form>
+</div>
+{% endblock content %}

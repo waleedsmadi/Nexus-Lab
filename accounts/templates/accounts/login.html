@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Login{% endblock title %}
+{% block extra_style %}<link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">{% endblock extra_style %}
+
+
+{% block content %}
+<div class="container">
+<form class="form" method="POST" style="width: 500px">
+    {% csrf_token %}
+    <h2 class="mb-3 text-center">Login</h2>
+    {% for field in form %}
+        
+            {% if field.widget_type == "email" %}
+                <div class="mb-3">
+                    <label for="email-login" class="form-label">Email address</label>
+                    {{field}}
+                </div>
+            {% elif field.widget_type == "password" %}
+                <div class="mb-3">
+                    <label for="password-login" class="form-label">Password</label>
+                    {{field}}
+                </div>
+            {% elif field.widget_type == "checkbox" %}
+                <div class="mb-3 form-check">
+                    {{field}}
+                    <label class="form-check-label" for="remember-me-login">Remember me</label>
+                </div>
+            {% endif %}
+            <!-- display errors for per field if exist -->
+            {% if field.errors %}
+                {% for err in field.errors %}
+                    <div style="font-size: 16px; color: red;">{{err}}</div>
+                {% endfor %}
+            {% endif %}
+    {% endfor %}
+
+
+
+    <button type="submit" class="btn btn-primary w-100 mt-2">Login</button>
+
+    {% if messages %}
+        {% for msg in messages %}
+                <div class="mt-3 mb-3 alert alert-{{msg.tags}}">{{msg}}</div>
+        {% endfor %}
+    {% endif %}
+
+
+    <a href="#" class="d-block mt-2" style="text-decoration-line: none;">Forgot password?</a>
+    <h4 class="text-center mt-5">Don't have an account?</h4>
+    <a href="{% url 'accounts:signup_view_url' %}" class="d-block text-center" style="text-decoration-line: none;">Create account</a>
+</form>
+</div>
+{% endblock content %}

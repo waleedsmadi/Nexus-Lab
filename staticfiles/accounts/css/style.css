@@ -1,0 +1,27 @@
+.form {
+    box-shadow: 1px 1px 18px 12px rgb(165, 164, 164);
+    margin: auto;
+    margin-top: 100px;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    padding: 20px;
+}
+
+
+  
+.activation-message {
+    width: 700px;
+    margin: auto;
+    margin-top: 120px;
+    box-shadow: 1px 1px 20px 4px rgb(165, 164, 164);
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+
+    padding: 20px;
+}
