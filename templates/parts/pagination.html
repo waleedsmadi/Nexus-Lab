@@ -2,9 +2,9 @@
   <ul class="pagination">
 
 
-    {% if products.has_previous %}
+    {% if page_obj.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?page={{products.previous_page_number}}" tabindex="-1" aria-disabled="true">Previous</a>
+            <a class="page-link" href="?page={{page_obj.previous_page_number}}" tabindex="-1" aria-disabled="true">Previous</a>
         </li>
     {% else %}
         <li class="page-item disabled">
@@ -14,10 +14,10 @@
 
 
 
-    {% for n in products.elided_pages %}
-        {% if n == products.paginator.ELLIPSIS %}
+    {% for n in page_obj.elided_pages %}
+        {% if n == page_obj.paginator.ELLIPSIS %}
             <li class="page-item"><a class="page-link">...</a></li>
-        {% elif n == products.number %}
+        {% elif n == page_obj.number %}
             <li class="page-item active"><a class="page-link">{{n}}</a></li>
         {% else %}
             <li class="page-item"><a class="page-link" href="?page={{n}}">{{n}}</a></li>
@@ -26,9 +26,9 @@
 
 
 
-    {% if products.has_next %}
+    {% if page_obj.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?page={{products.next_page_number}}">Next</a>
+            <a class="page-link" href="?page={{page_obj.next_page_number}}">Next</a>
         </li>
     {% else %}
         <li class="page-item disabled">

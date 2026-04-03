@@ -20,7 +20,7 @@ def products(request, category="all"):
     page_num = request.GET.get('page')
     page_obj = paginator.get_page(page_num)
     page_obj.elided_pages = paginator.get_elided_page_range(page_obj.number, on_each_side=2, on_ends=1)
-    return render(request, 'product/products.html', {'products': page_obj})
+    return render(request, 'product/products.html', {'page_obj': page_obj})
 
 
 
