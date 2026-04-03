@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.core.exceptions import PermissionDenied
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from .models import Transaction, Wallet
+from django.core.paginator import Paginator
+
 
 def view_wallet(request, username):
     if request.user.username != username:
@@ -24,5 +26,8 @@ def view_transactions(request, username):
     
 
     transactions = Transaction.objects.filter(wallet=wallet)
-    
-    return render(request, 'wallet/transactions.html', {'transactions': transactions})
+    paginator = Paginator(transactions, 8)
+    page_num = request.GET.get('page')
+    page_obj = paginator.get_page(page_num)
+    page_obj.elided_pages = paginator.get_elided_page_range(page_obj.number, on_each_side=2, on_ends=1)
+    return render(request, 'wallet/transactions.html', {'page_obj': page_obj})
