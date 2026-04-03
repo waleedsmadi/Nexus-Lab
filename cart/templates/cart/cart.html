@@ -8,6 +8,12 @@
 <div class="container" id="cart-container">
     <div class="d-flex flex-column justify-content-center mx-auto" style="margin-top: 100px; width: 1000px; box-shadow: 1px 1px 18px 12px rgb(165, 164, 164); border-radius: 15px; padding: 20px;">
         <h2>Nexus Lab Cart</h2>
+        {% if messages %}
+            {% for msg in messages %}
+                <div class="mt-3 mb-3 alert alert-{{msg.tags}}">{{msg}}</div>
+            {% endfor %}
+        {% endif %}
+        
         <hr>
 
         {% if products %}
@@ -60,7 +66,7 @@
                 <hr>
             {% endfor %}
             <h4 id="total_cart_price"><b>Total price</b>: {{total_cart_price}}$</h4>
-            <form id="checkout-form" method="POST" class="d-flex justify-content-center">
+            <form action="{% url 'orders:checkout_url' %}" id="checkout-form" method="POST" class="d-flex justify-content-center">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-info w-50">Checkout</button>
             </form>
