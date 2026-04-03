@@ -4,6 +4,9 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import MinLengthValidator
 from django.core.validators import FileExtensionValidator
+
+
+
 class LoginForm(forms.Form):
     email = forms.EmailField(
         max_length=200,
@@ -267,8 +270,68 @@ class ChangePasswordForm(forms.Form):
     
 
 
+# for forgot password logic
+class EmailForm(forms.Form):
+    email = forms.CharField(
+        max_length=200,
+        label='',
+        help_text='',
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Email...',
+        }),
+        required=True
+    )
 
+
+
+
+class ResetPasswordForm(forms.Form):
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+
+    new_password = forms.CharField(
+        max_length=255,
+        label='',
+        help_text='',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'New password...',
+        }),
+        required=True
+    )
+
+
+    re_password = forms.CharField(
+        max_length=255,
+        label='',
+        help_text='',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Confirm password...',
+        }),
+        required=True
+    )
+
+
+
+    def clean_new_password(self):
+        new_password = self.cleaned_data.get('new_password')
+        validate_password(new_password, self.user)
+        return new_password
     
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        new_password = cleaned_data.get('new_password')
+        re_password = cleaned_data.get('re_password')
+
+        if new_password and re_password and new_password != re_password:
+            raise ValidationError('Error: The new password and the Confirm password fields do not match.')
+        return cleaned_data
+
 
 
     

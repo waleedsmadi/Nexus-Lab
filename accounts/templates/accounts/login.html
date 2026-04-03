@@ -46,7 +46,7 @@
     {% endif %}
 
 
-    <a href="#" class="d-block mt-2" style="text-decoration-line: none;">Forgot password?</a>
+    <a href="{% url 'accounts:check_email_url' %}" class="d-block mt-2" style="text-decoration-line: none;">Forgot password?</a>
     <h4 class="text-center mt-5">Don't have an account?</h4>
     <a href="{% url 'accounts:signup_view_url' %}" class="d-block text-center" style="text-decoration-line: none;">Create account</a>
 </form>

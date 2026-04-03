@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import LoginForm, SignupModelForm, UpdateProfileForm, ChangePasswordForm
+from .forms import LoginForm, SignupModelForm, UpdateProfileForm, ChangePasswordForm, EmailForm, ResetPasswordForm
 from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib import messages
 from .models import AuthUser
@@ -16,6 +16,10 @@ from django.utils.safestring import mark_safe
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.core import signing
+from uuid import uuid4
+from time import sleep
+
 
 
 # Create your views here.
@@ -180,6 +184,10 @@ def resend_activation_link(request):
     return render(request, 'accounts/resend_form.html')
     
 
+
+
+
+
 def send_activation_link(user, link):
     subject = "Activation Account"
     message = f'To activate your account, please click on the link below.\nLink:\n {link}'
@@ -292,3 +300,74 @@ def logout_account(request):
         return redirect('accounts:login_view_url')
 
     return redirect("pages:home_url")
+
+
+
+
+@ratelimit(key="post:user.email", rate='5/m', block=True)
+def check_email(request):
+    if request.user.is_authenticated:
+        return redirect('pages:home_url')
+    
+
+    if request.method == "POST":
+        form = EmailForm(request.POST)
+
+        if form.is_valid():
+            try:
+                user = AuthUser.objects.get(email=form.cleaned_data['email'])
+                random_uuid = str(user.pk)
+                token = signing.dumps(random_uuid, salt=f'reset_password-{user.password}')
+                url = reverse('accounts:reset_password_url', args=[token])
+                link = request.build_absolute_uri(url)
+
+                
+                send_mail(
+                    subject="Reset Your Password",
+                    message=f'Please enter the link below to reset password\nLink: {link}',
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[user.email]
+                )
+                messages.info(request, 'If your email address is registered with us, we have sent you a link to change your password. Check your email.')
+                return redirect('accounts:check_email_url')
+            except AuthUser.DoesNotExist:
+                sleep(3)
+                messages.info(request, 'If your email address is registered with us, we have sent you a link to change your password. Check your email.')
+                return redirect('accounts:check_email_url')
+
+    form = EmailForm()
+    return render(request, 'accounts/email.html', {'form': form})
+
+
+
+def reset_password(request, token):
+    if request.user.is_authenticated:
+        return redirect('pages:home_url')
+    
+    try:
+        payload = token.split(":")[0]
+        
+        user_id_json = signing.b64_decode(payload.encode()).decode()
+        import json
+        user_id = json.loads(user_id_json)
+
+        user = AuthUser.objects.get(pk=user_id)
+        user_id = signing.loads(token, salt=f'reset_password-{user.password}', max_age=600)
+        
+    except (signing.SignatureExpired, signing.BadSignature, AuthUser.DoesNotExist):
+        messages.error(request, 'The link is invalid or expired!')
+        return redirect('accounts:check_email_url')
+
+    
+    if request.method == "POST":
+        form = ResetPasswordForm(data=request.POST, user=user)
+        if form.is_valid():
+            new_password = form.cleaned_data.get('new_password')
+            user.set_password(new_password)
+            user.save()
+            messages.info(request, 'Your password has been updated!')
+            return redirect('accounts:login_view_url')
+    else:
+        form = ResetPasswordForm(user=user)
+        
+    return render(request, 'accounts/reset_password.html', {'form': form})
