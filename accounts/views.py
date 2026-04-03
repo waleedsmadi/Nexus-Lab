@@ -39,7 +39,7 @@ def gen_activation_link(user):
 @ratelimit(key='post:email', rate='3/m', block=True, method='POST')
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('product:products_url')
+        return redirect('pages:home_url')
     
     
     form = LoginForm()
