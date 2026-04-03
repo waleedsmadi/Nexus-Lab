@@ -9,8 +9,15 @@ def view_wallet(request, username):
     if request.user.username != username:
         raise PermissionDenied
     
+    exists = True
+    try:
+        Wallet.objects.get(user=request.user)
+    except Wallet.DoesNotExist:
+        exists = False
+
     
-    return render(request, 'wallet/wallet.html')
+    
+    return render(request, 'wallet/wallet.html', {"is_exists": exists})
 
 
 
