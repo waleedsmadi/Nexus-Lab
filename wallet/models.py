@@ -1,8 +1,9 @@
 from django.db import models
 from django.db.models import Q
 from accounts.models import AuthUser
-from django.db.models.functions import Length
-# Create your models here.
+from django.core.validators import MaxLengthValidator, MinLengthValidator
+
+
 import secrets
 from string import digits
 
@@ -15,7 +16,7 @@ def gen_wallet_number():
 
 
 class Wallet(models.Model):
-    wallet_number = models.CharField(max_length=12, unique=True, editable=False, verbose_name='Wallet Number')
+    wallet_number = models.CharField(max_length=12, unique=True, editable=False, verbose_name='Wallet Number', validators=[MinLengthValidator(12), MaxLengthValidator(12)])
     user = models.OneToOneField(
         to=AuthUser,
         on_delete=models.CASCADE,
@@ -27,9 +28,7 @@ class Wallet(models.Model):
 
     class Meta:
         constraints = [
-            models.CheckConstraint(name='chk_wallet_balance', condition=Q(balance__gte=0.00)),
-            models.CheckConstraint(name='chk_wallet_wallet_number', condition=Q(wallet_number__length=12)),
-            
+            models.CheckConstraint(name='chk_wallet_balance', condition=Q(balance__gte=0.00)),            
         ]
 
     def __str__(self):
