@@ -11,7 +11,7 @@ from django_ratelimit.decorators import ratelimit
 @login_required
 @ratelimit(key='post:request.user.username', rate='5/m', block=True)
 def create_wallet(request):
-    if request.user.wallet:
+    if hasattr(request.user, 'wallet'):
         return redirect('wallet:wallet_url', request.user.username)
     
 
