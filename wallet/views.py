@@ -31,7 +31,7 @@ def create_wallet(request):
 
 
 
-
+@login_required
 def view_wallet(request, username):
     if request.user.username != username:
         raise PermissionDenied
@@ -47,7 +47,7 @@ def view_wallet(request, username):
     return render(request, 'wallet/wallet.html', {"is_exists": exists})
 
 
-
+@login_required
 @xframe_options_sameorigin
 def view_transactions(request, username):
     if request.user.username != username:
