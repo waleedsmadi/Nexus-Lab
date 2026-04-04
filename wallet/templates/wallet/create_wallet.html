@@ -11,8 +11,11 @@
         {% csrf_token %}
         <h2>Create Nexus Lab Wallet</h2>
         <hr>
-        {{form}}
-
+        <p class="alert alert-warning">
+            Note: When you click the "Create Wallet" button, a wallet will be created with a balance of 0 and a unique wallet number. 
+            You will be able to fund it by visiting your wallet after it is created.
+            This behavior is not real because you are in a penetration testing environment for experimentation and learning purposes.
+        </p>
         <button type="submit" class="btn btn-info">Create Wallet</button>
     </form>
 

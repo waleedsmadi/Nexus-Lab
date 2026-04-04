@@ -9,25 +9,17 @@ from django_ratelimit.decorators import ratelimit
 
 
 @login_required
-@ratelimit(key='post:request.user.username', rate='5/m', block=True)
+@ratelimit(key='user', method='POST', rate='5/m', block=True)
 def create_wallet(request):
     if hasattr(request.user, 'wallet'):
-        return redirect('wallet:wallet_url', request.user.username)
-    
-
-    if request.method == "POST":
-        form = WalletForm(request.POST)
-        if form.is_valid():
-            wallet = form.save(commit=False)
-            wallet.user = request.user
-            wallet.save()
             return redirect('wallet:wallet_url', request.user.username)
-        else:
-            return render(request, 'wallet/create_wallet.html', {'form': form})
+    
+    if request.method == "POST":
+        wallet, created = Wallet.objects.get_or_create(user=request.user)
+        return redirect('wallet:wallet_url', request.user.username)
 
-    else:
-        form = WalletForm()
-        return render(request, 'wallet/create_wallet.html', {'form': form})
+        
+    return render(request, 'wallet/create_wallet.html')
 
 
 
