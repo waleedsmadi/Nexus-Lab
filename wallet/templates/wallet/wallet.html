@@ -9,7 +9,6 @@
         background-color: #000000;
         color: #fff;
     }
-    /* You don't have a wallet; it was either deleted or something went wrong during its creation. You can create a wallet here. */
 
 </style>
 <div class="container">
@@ -33,7 +32,7 @@
         
         <div class="wallet-info d-flex flex-column justify-content-center mx-auto" style="margin-top: 250px; width: 700px; box-shadow: 1px 1px 18px 12px rgb(165, 164, 164); border-radius: 15px; padding: 20px;">
             <h2>Nexus Lab's Wallet</h2>
-            <div class="alert alert-warning">You don't have a wallet, it was either deleted or something went wrong during its creation. You can create a wallet <a href="#" style="text-decoration-line: none;">here</a></div>
+            <div class="alert alert-warning">You don't have a wallet, it was either deleted or something went wrong during its creation. You can create a wallet <a href="{% url 'wallet:create_wallet_url' %}" style="text-decoration-line: none;">here</a></div>
         </div>
     {% endif %}
 

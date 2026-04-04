@@ -3,6 +3,33 @@ from django.core.exceptions import PermissionDenied
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from .models import Transaction, Wallet
 from django.core.paginator import Paginator
+from .forms import WalletForm
+from django.contrib.auth.decorators import login_required
+from django_ratelimit.decorators import ratelimit
+
+
+@login_required
+@ratelimit(key='post:request.user.username', rate='5/m', block=True)
+def create_wallet(request):
+    if request.user.wallet:
+        return redirect('wallet:wallet_url', request.user.username)
+    
+
+    if request.method == "POST":
+        form = WalletForm(request.POST)
+        if form.is_valid():
+            wallet = form.save(commit=False)
+            wallet.user = request.user
+            wallet.save()
+            return redirect('wallet:wallet_url', request.user.username)
+        else:
+            return render(request, 'wallet/create_wallet.html', {'form': form})
+
+    else:
+        form = WalletForm()
+        return render(request, 'wallet/create_wallet.html', {'form': form})
+
+
 
 
 def view_wallet(request, username):
