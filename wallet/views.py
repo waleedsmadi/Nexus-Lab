@@ -3,7 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from .models import Transaction, Wallet, TransactionType
 from django.core.paginator import Paginator
-from .forms import DepoistWalletForm
+from .forms import DepositWalletForm
 from django.contrib.auth.decorators import login_required
 from django_ratelimit.decorators import ratelimit
 from django.contrib import messages
@@ -79,7 +79,7 @@ def deposit(request, username):
     
 
     if request.method == "POST":
-        form = DepoistWalletForm(request.POST)
+        form = DepositWalletForm(request.POST)
         if form.is_valid():
 
             # get the wallet for this user by (select_for_update) To avoid interference problems
@@ -98,14 +98,14 @@ def deposit(request, username):
                 wallet=wallet,
                 amount=deposit_amount,
                 transaction_type=TransactionType.Deposit,
-                description=f"Depoist for User: #{request.user.id}"
+                description=f"Deposit for User: #{request.user.id}"
             )
             messages.success(request, f'The balance has been updated from {old_balance}$ - to {wallet.balance}$')
-            return redirect('wallet:depoist_url', username=request.user.username)
-        return render(request, 'wallet/depoist.html', {'form': form})
+            return redirect('wallet:deposit_url', username=request.user.username)
+        return render(request, 'wallet/deposit.html', {'form': form})
     
     else:
-        form = DepoistWalletForm()
-    return render(request, 'wallet/depoist.html', {'form': form})
+        form = DepositWalletForm()
+    return render(request, 'wallet/deposit.html', {'form': form})
 
     

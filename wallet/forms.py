@@ -5,7 +5,7 @@ from decimal import Decimal, InvalidOperation
 
 
 
-class DepoistWalletForm(forms.ModelForm):
+class DepositWalletForm(forms.ModelForm):
     
 
     class Meta:
