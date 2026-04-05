@@ -1,11 +1,11 @@
 from django import forms
 from .models import Wallet
+from django.core.exceptions import ValidationError
+from decimal import Decimal, InvalidOperation
 
 
 
-
-
-class WalletForm(forms.ModelForm):
+class DepoistWalletForm(forms.ModelForm):
     
 
     class Meta:
@@ -18,7 +18,7 @@ class WalletForm(forms.ModelForm):
                 'placeholder': 'Balance',
                 'step': "0.01",
                 'max': "999999999.99",
-                'min': '0',
+                'min': '5',
             })
         }
 
@@ -29,3 +29,19 @@ class WalletForm(forms.ModelForm):
 
         for name, field in self.fields.items():
             field.required = True
+        
+    
+    def clean_balance(self):
+        balance = self.cleaned_data.get('balance')
+
+        if balance is None:
+            raise ValidationError('Error: Please enter a valid value.!')
+        
+        try:
+            balance = Decimal(str(balance))
+        except (ValueError, TypeError, InvalidOperation):
+            balance = Decimal("0.00")
+
+        if balance < 5:
+            raise ValidationError('Error: The balance should be at least 5$ or more.! ')
+        return balance
