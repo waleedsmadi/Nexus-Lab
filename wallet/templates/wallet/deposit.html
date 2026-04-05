@@ -16,12 +16,14 @@
             This behavior is not real because you are in a penetration testing environment for experimentation and learning purposes.
         </p>
 
-        {{form}}
-        {% if form.field.errors %}
-            {% for err in form.field.errors %}
-                <div style="font-size: 16px; color: red;" class="mb-3">{{err}}</div>
-            {% endfor %}
-        {% endif %}
+        {% for field in form %}
+            {{field}}
+            {% if field.errors %}
+                {% for err in field.errors %}
+                    <div style="font-size: 16px; color: red;" class="mb-3">{{err}}</div>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
             
         <button type="submit" class="btn btn-success">Deposit</button>
         {% if messages %}
