@@ -54,6 +54,9 @@ class WithdrawalWalletForm(forms.Form):
         amount = self.cleaned_data.get('amount')
 
 
+        if amount and amount < 5:
+            raise ValidationError('Error: The amount should be at least 5$ or more.!')
+
         if amount and amount < 0:
             raise ValidationError('Error: The amount should be greater than zero.')
 
