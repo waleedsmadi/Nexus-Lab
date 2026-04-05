@@ -65,7 +65,7 @@ class Transaction(models.Model):
     class Meta:
         ordering = ['-created_at']
         constraints = [
-            models.CheckConstraint(name='chk_transaction_amount', condition=Q(amount__gte=5.00))
+            models.CheckConstraint(name='chk_transaction_amount', condition=Q(amount__gte=0.00))
         ]
 
     def __str__(self):
