@@ -25,6 +25,7 @@
             </div>
             <hr>
             <a href="{% url 'wallet:deposit_url' request.user.username %}" class="btn btn-info w-25">deposit</a>
+            <a href="{% url 'wallet:withdrawal_url' request.user.username %}" class="btn btn-info w-25">withdraw</a>
         </div>
 
         <hr>

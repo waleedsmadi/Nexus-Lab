@@ -3,7 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.views.decorators.clickjacking import xframe_options_sameorigin
 from .models import Transaction, Wallet, TransactionType
 from django.core.paginator import Paginator
-from .forms import DepositWalletForm
+from .forms import DepositWalletForm, WithdrawalWalletForm
 from django.contrib.auth.decorators import login_required
 from django_ratelimit.decorators import ratelimit
 from django.contrib import messages
@@ -108,4 +108,50 @@ def deposit(request, username):
         form = DepositWalletForm()
     return render(request, 'wallet/deposit.html', {'form': form})
 
+
+
+
+@login_required
+@ratelimit(key='user', method='POST', rate='5/m', block=True)
+@transaction.atomic
+def withdraw(request, username):
+    if request.user.username != username:
+        raise PermissionDenied
     
+
+    if not hasattr(request.user, 'wallet'):
+        return redirect('wallet:wallet_url', username=request.user.username)
+    
+
+    if request.method == "POST":
+        form = WithdrawalWalletForm(request.POST)
+        if form.is_valid():
+            wallet = Wallet.objects.select_for_update().get(user=request.user)
+            amount = form.cleaned_data.get('amount')
+
+            if amount > wallet.balance:
+                form.add_error('amount', 'Sorry, your current balance is insufficient to complete this transaction.!')
+            else:
+            
+
+                # withdraw
+                old_balance = wallet.balance
+                wallet.balance -= amount
+                wallet.save()
+
+
+                # create transaction
+                Transaction.objects.create(
+                    wallet=wallet,
+                    amount=amount,
+                    transaction_type=TransactionType.Withdraw,
+                    description=f"Withdrawal for User: #{request.user.id}"
+                )
+                messages.success(request, f'The balance has been updated from {old_balance}$ - to {wallet.balance}$')
+                return redirect('wallet:withdrawal_url', username=request.user.username)
+        
+    
+    else:
+        form = WithdrawalWalletForm()
+
+    return render(request, 'wallet/withdrawal.html', {'form': form})

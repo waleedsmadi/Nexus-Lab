@@ -45,3 +45,30 @@ class DepositWalletForm(forms.ModelForm):
         if balance < 5:
             raise ValidationError('Error: The balance should be at least 5$ or more.! ')
         return balance
+
+
+
+
+class WithdrawalWalletForm(forms.Form):
+    amount = forms.DecimalField(
+        required=True,
+        max_digits=11,
+        decimal_places=2,
+        help_text='',
+        label='',
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Amount...',
+        }),
+    )
+
+
+
+    def clean_amount(self):
+        amount = self.cleaned_data.get('amount')
+
+
+        if amount and amount < 0:
+            raise ValidationError('Error: The amount should be greater than zero.')
+
+        return amount
