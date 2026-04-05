@@ -19,7 +19,7 @@
         {{form}}
         {% if form.field.errors %}
             {% for err in form.field.errors %}
-                <div style="font-size: 16px; color: red;" class="mb-3">sssss</div>
+                <div style="font-size: 16px; color: red;" class="mb-3">{{err}}</div>
             {% endfor %}
         {% endif %}
             
