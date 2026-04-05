@@ -77,19 +77,21 @@ def load_more_products(request):
         
     title = request.GET.get("title", '')
     # require 13 items (12 for display and 1 for inspection)
-    end = start + 13 
+
+    limit = 12
+    end = start + limit + 1
     
     # The query that get more products 
     prods_qs = Product.objects.filter(title__icontains=title).annotate(
         final_price=F('price') - Coalesce(F('discount'), Value(0))
-    ).order_by().distinct()
+    )
 
     # get data using 'slice'
     prods_values = list(prods_qs.values('id', 'slug', 'title', 'description', 'img', 'final_price', 'discount', 'price')[start:end])
 
-    is_there_more = len(prods_values) > 12
+    is_there_more = len(prods_values) > limit
     # take first 12 items to send
-    data = prods_values[:12]
+    data = prods_values[:limit]
     
     for item in data:
         if item['img']:
