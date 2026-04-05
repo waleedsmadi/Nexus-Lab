@@ -24,7 +24,7 @@
                 <div class="badge bg-primary text-wrap ms-2" style="width: 10rem; font-size: 18px;">{{user.wallet.wallet_number}}</div>
             </div>
             <hr>
-            <a href="{% url 'wallet:depoist_url' request.user.username %}" class="btn btn-info w-25">Depoist</a>
+            <a href="{% url 'wallet:deposit_url' request.user.username %}" class="btn btn-info w-25">deposit</a>
         </div>
 
         <hr>
