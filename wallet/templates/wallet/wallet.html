@@ -24,8 +24,11 @@
                 <div class="badge bg-primary text-wrap ms-2" style="width: 10rem; font-size: 18px;">{{user.wallet.wallet_number}}</div>
             </div>
             <hr>
-            <a href="{% url 'wallet:deposit_url' request.user.username %}" class="btn btn-info w-25">deposit</a>
-            <a href="{% url 'wallet:withdrawal_url' request.user.username %}" class="btn btn-info w-25">withdraw</a>
+
+            <div class="flex">
+                <a href="{% url 'wallet:deposit_url' request.user.username %}" class="btn btn-info w-25">Deposit</a>
+                <a href="{% url 'wallet:withdrawal_url' request.user.username %}" class="btn btn-info w-25 ms-3">Withdraw</a>
+            </div>
         </div>
 
         <hr>
