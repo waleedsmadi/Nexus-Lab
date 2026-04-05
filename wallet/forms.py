@@ -24,12 +24,17 @@ class DepositWalletForm(forms.Form):
     def clean_balance(self):
         balance = self.cleaned_data.get('balance')
 
+        if balance is None:
+            raise ValidationError('Error: Please enter a valid value.!')
 
-        if balance and balance < 5:
+
+        try:
+            balance = Decimal(str(balance))
+        except (ValueError, TypeError, InvalidOperation):
+            raise ValidationError('Error: The amount must be a number.!')
+
+        if balance < 5:
             raise ValidationError('Error: The balance should be at least 5$ or more.!')
-
-        if balance and balance < 0:
-            raise ValidationError('Error: The balance should be greater than zero.')
         
         return balance
 
@@ -52,12 +57,14 @@ class WithdrawalWalletForm(forms.Form):
 
     def clean_amount(self):
         amount = self.cleaned_data.get('amount')
+        if amount is None:
+            raise ValidationError('Error: Please enter a valid value.!')
+        try:
+            amount = Decimal(str(amount))
+        except (ValueError, TypeError, InvalidOperation):
+            raise ValidationError('Error: The amount must be a number.!')
 
-
-        if amount and amount < 5:
+        if amount < 5:
             raise ValidationError('Error: The amount should be at least 5$ or more.!')
-
-        if amount and amount < 0:
-            raise ValidationError('Error: The amount should be greater than zero.')
 
         return amount
