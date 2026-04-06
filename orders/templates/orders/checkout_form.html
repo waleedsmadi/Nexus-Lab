@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}CheckOut | NexusLab{% endblock title %}
+
+
+{% block content %}
+
+<div class="container">
+    
+    <form method="POST" class="wallet-info d-flex flex-column justify-content-center mx-auto" style="margin-top: 100px; width: 700px; box-shadow: 1px 1px 18px 12px rgb(165, 164, 164); border-radius: 15px; padding: 20px;">
+        {% csrf_token %}
+        <h2>CheckOut</h2>
+        <hr>
+
+        {% for field in form %}
+            {{field}}
+            {% if field.errors %}
+                {% for err in field.errors %}
+                    <div style="font-size: 16px; color: red;" class="mb-3">{{err}}</div>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+            
+        <button type="submit" class="btn btn-success">CheckOut</button>
+        {% if form.non_field_errors %}
+            {% for err in form.non_field_errors %}
+                <div style="font-size: 16px; color: red;" class="mb-3">{{err}}</div>
+            {% endfor %}
+        {% endif %} 
+    </form>
+
+</div>
+{% endblock content %}
