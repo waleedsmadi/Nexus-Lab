@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'wallet.apps.WalletConfig',
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
+    'vdp.apps.VdpConfig',
 ]
 
 MIDDLEWARE = [
