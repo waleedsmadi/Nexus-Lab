@@ -43,13 +43,13 @@ def checkout(request):
             try:
                 wallet = Wallet.objects.select_for_update().get(user=request.user, wallet_number=wallet_number)
             except Wallet.DoesNotExist:
-                form.add_error('__all__', "Wallet number or the password is incorrect.!")
+                form.add_error('__all__', "The wallet number or password is incorrect.!")
                 return render(request, 'orders/checkout_form.html', {"form": form})
 
 
             #[3] - check if the password is correct
             if not request.user.check_password(password):
-                form.add_error('__all__', "Wallet number or the password is incorrect.!")
+                form.add_error('__all__', "The wallet number or password is incorrect.!")
                 return render(request, 'orders/checkout_form.html', {"form": form})
             
 

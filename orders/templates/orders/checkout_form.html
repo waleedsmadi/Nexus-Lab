@@ -13,13 +13,21 @@
         <hr>
 
         {% for field in form %}
-            {{field}}
-            {% if field.errors %}
-                {% for err in field.errors %}
-                    <div style="font-size: 16px; color: red;" class="mb-3">{{err}}</div>
-                {% endfor %}
-            {% endif %}
+            <div class="mb-3">
+                {% if field.name == "wallet_number" %}
+                    <label for="checkout-wallet-number" class="form-label">Wallet number</label>
+                {% elif field.name == "password" %}
+                    <label for="checkout-password" class="form-label">Your Password</label>
+                {% endif %}
+                {{field}}
+                {% if field.errors %}
+                    {% for err in field.errors %}
+                        <div style="font-size: 16px; color: red;" class="mb-3">{{err}}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
         {% endfor %}
+
             
         <button type="submit" class="btn btn-success">CheckOut</button>
         {% if form.non_field_errors %}

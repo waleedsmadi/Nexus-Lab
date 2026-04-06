@@ -9,8 +9,9 @@ class CheckOutForm(forms.Form):
         max_length=12,
         min_length=12,
         widget=forms.TextInput(attrs={
-            "class": 'form-control',
+            "class": 'form-control mb-3',
             "placeholder": "Your wallet number...",
+            'id': 'checkout-wallet-number',
         })
     )
 
@@ -20,8 +21,9 @@ class CheckOutForm(forms.Form):
         help_text='',
         label='',
         widget=forms.PasswordInput(attrs={
-            'class': 'form-control',
+            'class': 'form-control mb-3',
             'placeholder': 'Password...',
+            'id': 'checkout-password',
         })
     )
 
