@@ -1,3 +1,10 @@
 from django.contrib import admin
+from .models import Submission
 
-# Register your models here.
+@admin.register(Submission)
+class SubmissionAdmin(admin.ModelAdmin):
+    list_display = ['user', 'vulner_type', 'severity', 'status', 'created_at', 'updated_at']
+    list_filter = ['vulner_type', 'severity', 'status']
+    search_fields = ['title', 'user', 'vulner_type']
+    list_display_links = ['vulner_type']
+    raw_id_fields = ['user']
