@@ -10,26 +10,26 @@ from django.core.paginator import Paginator
 
 @login_required
 @ratelimit(key='user', method='POST', rate='5/m', block=True)
-def submission(request):
+def create_report(request):
     if request.method == "POST":
         form = SubmissionForm(request.POST, request.FILES, request=request)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.user = request.user
             instance.save()
-            return redirect('vdp:submission_view_url')
-        return render(request, 'vdp/submission.html', {'form': form}) 
+            return redirect('reports:reports_view_url')
+        return render(request, 'reports/report_create.html', {'form': form}) 
     else:
         form = SubmissionForm(request=request)
-    return render(request, 'vdp/submission.html', {'form': form})
+    return render(request, 'reports/report_create.html', {'form': form})
 
 
 
 @login_required
-def submission_view(request):
-    submissions = Submission.objects.filter(user=request.user)
-    paginator = Paginator(submissions, 10)
+def view_reports(request):
+    reports = Submission.objects.filter(user=request.user)
+    paginator = Paginator(reports, 10)
     page_num = request.GET.get('page')
     page_obj = paginator.get_page(page_num)
     page_obj.elided_pages = paginator.get_elided_page_range(page_obj.number, on_each_side=2, on_ends=1)
-    return render(request, 'vdp/submissions_view.html', {'page_obj': page_obj})
+    return render(request, 'reports/reports_view.html', {'page_obj': page_obj})
