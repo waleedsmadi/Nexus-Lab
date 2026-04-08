@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Submission | Nexus{% endblock title %}
+{% block extra_style %}<link rel="stylesheet" href="{% static 'accounts/css/style.css' %}">{% endblock extra_style %}
+
+
+
+{% block content %}
+<div class="container">
+<form class="form" method="POST" style="width: 1000px; margin-top: 100px;" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% for field in form %}
+        <div class="mb-3">
+            {% if field.name == "title" %}
+                <label for="vdp-title" class="form-label">Title</label>
+            {% elif field.name == "vulner_type" %}
+                <label for="vdp-vulner_type" class="form-label">Type</label>
+            {% elif field.name == "severity" %}
+                <label for="vdp-severity" class="form-label">Severity</label>
+            {% elif field.name == "url" %}
+                <label for="vdp-url" class="form-label">Infected url</label>
+            {% elif field.name == "description" %}
+                <label for="vdp-description" class="form-label">Explain the vulnerability</label>
+            {% elif field.name == "steps_to_reproduce" %}
+                <label for="vdp-steps_to_reproduce" class="form-label">Steps to reproduce</label>
+            {% elif field.name == "poc" %}
+                <label for="vdp-poc" class="form-label">PoC File</label>
+            {% elif field.name == "impact" %}
+                <label for="vdp-impact" class="form-label">Impact</label>
+            {% elif field.name == "recommended_fix" %}
+                <label for="vdp-recommended_fix" class="form-label">Recommended fix</label>
+            {% endif %}
+
+            {{field}}
+            {% if field.errors %}
+                {% for err in field.errors %}
+                    <div style="font-size: 16px; color: red;">{{err}}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endfor %}
+    
+    
+
+    <button type="submit" class="btn btn-primary w-100 mt-2">Report</button>
+
+</form>
+</div>
+{% endblock content %}

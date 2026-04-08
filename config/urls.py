@@ -13,6 +13,7 @@ urlpatterns = [
     path('wallet/', include('wallet.urls', namespace='wallet')),
     path('cart/', include('cart.urls', namespace='cart')),
     path('orders/', include('orders.urls', namespace='orders')),
+    path('vdp/', include('vdp.urls', namespace='vdp')),
 ]
 
 
