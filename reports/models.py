@@ -39,11 +39,11 @@ class VulnerStatus(models.TextChoices):
 
 
 
-class Submission(models.Model):
+class Report(models.Model):
     user = models.ForeignKey(
         to=AuthUser,
         on_delete=models.SET_NULL,
-        related_name='submissions',
+        related_name='reports',
         verbose_name='User',
         null=True,
         blank=True

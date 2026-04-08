@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import SubmissionForm
-from .models import Submission
+from .forms import ReportForm
+from .models import Report
 from django.contrib.auth.decorators import login_required
 from django_ratelimit.decorators import ratelimit
 from django.core.paginator import Paginator
@@ -12,7 +12,7 @@ from django.core.paginator import Paginator
 @ratelimit(key='user', method='POST', rate='5/m', block=True)
 def create_report(request):
     if request.method == "POST":
-        form = SubmissionForm(request.POST, request.FILES, request=request)
+        form = ReportForm(request.POST, request.FILES, request=request)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.user = request.user
@@ -20,14 +20,14 @@ def create_report(request):
             return redirect('reports:reports_view_url')
         return render(request, 'reports/report_create.html', {'form': form}) 
     else:
-        form = SubmissionForm(request=request)
+        form = ReportForm(request=request)
     return render(request, 'reports/report_create.html', {'form': form})
 
 
 
 @login_required
 def view_reports(request):
-    reports = Submission.objects.filter(user=request.user)
+    reports = Report.objects.filter(user=request.user)
     paginator = Paginator(reports, 10)
     page_num = request.GET.get('page')
     page_obj = paginator.get_page(page_num)

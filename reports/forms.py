@@ -1,13 +1,13 @@
 from django import forms
-from .models import Submission
+from .models import Report
 import magic
 from django.core.exceptions import ValidationError
 from urllib.parse import urlparse
 
 
-class SubmissionForm(forms.ModelForm):
+class ReportForm(forms.ModelForm):
     class Meta:
-        model = Submission
+        model = Report
         exclude = ['id', 'user', 'status', 'created_at', 'updated_at']
         widgets = {
             'title': forms.TextInput(attrs={
